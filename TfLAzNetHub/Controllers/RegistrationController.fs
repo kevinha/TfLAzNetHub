@@ -51,7 +51,7 @@ type RegistrationController (logger : ILogger<WeatherForecastController>) =
     member __.Put(id:string, deviceUpdate:DeviceRegistration) =
         let reg = FcmRegistrationDescription(deviceUpdate.Handle)
         reg.RegistrationId <- id
-        reg.Tags = (HashSet<string>(deviceUpdate.Tags) :> ISet<string>)
+        reg.Tags <- (HashSet<string>(deviceUpdate.Tags) :> ISet<string>)
 
         async { let! _ = Notifications.hub.CreateRegistrationAsync(reg) |> Async.AwaitTask
                 return () } |> Async.RunSynchronously
