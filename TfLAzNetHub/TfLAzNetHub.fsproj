@@ -9,6 +9,7 @@
         <Compile Include="Models\Notifications.fs" />
         <Compile Include="Controllers/WeatherForecastController.fs" />
         <Compile Include="Controllers\RegistrationController.fs" />
+        <Compile Include="Controllers\NotificationsController.fs" />
         <Compile Include="SimpleAuth.fs" />
         <Compile Include="Startup.fs" />
         <Compile Include="Program.fs" />

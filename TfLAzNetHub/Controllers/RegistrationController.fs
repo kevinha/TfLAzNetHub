@@ -1,5 +1,7 @@
 namespace TfLAzNetHub.Controllers
 
+open System.Collections.Generic
+open System.Net.Http
 open Microsoft.Azure.NotificationHubs;
 open Microsoft.Azure.NotificationHubs.Messaging;
 open Microsoft.AspNetCore.Mvc
@@ -43,5 +45,20 @@ type RegistrationController (logger : ILogger<WeatherForecastController>) =
                            let! regId = Notifications.hub.CreateRegistrationIdAsync() |> Async.AwaitTask
                            return regId
                       } |> Async.StartAsTask
-            
+        
 
+    [<HttpPut>]
+    member __.Put(id:string, deviceUpdate:DeviceRegistration) =
+        let reg = FcmRegistrationDescription(deviceUpdate.Handle)
+        reg.RegistrationId <- id
+        reg.Tags = (HashSet<string>(deviceUpdate.Tags) :> ISet<string>)
+
+        async { let! _ = Notifications.hub.CreateRegistrationAsync(reg) |> Async.AwaitTask
+                return () } |> Async.RunSynchronously
+        Task.FromResult (OkResult())
+
+    [<HttpDelete>]
+    member __.Delete(id: string) =
+        async { let! _ = Notifications.hub.DeleteRegistrationAsync(id) |> Async.AwaitTask
+                return () } |> Async.RunSynchronously
+        Task.FromResult (OkResult())
